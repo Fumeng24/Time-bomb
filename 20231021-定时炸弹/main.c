@@ -36,9 +36,9 @@ void delay(unsigned int xms)
 
 void beep()
 {
-feng=0x00;
+feng =1;
 delay(50);
-feng = 0xff;
+feng =0;
 delay(50);
 }
 

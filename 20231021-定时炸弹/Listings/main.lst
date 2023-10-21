@@ -1,0 +1,220 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              10/21/2023 09:46:15 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\Program Fiiles\keil\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\L
+                    -istings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          sbit we = P2 ^ 7;
+   3          sbit du = P2 ^ 6;
+   4          sbit feng = P2 ^ 3;
+   5          
+   6          
+   7          //unsigned char number[]=
+   8          //  {
+   9          //  0x3F,  //"0"
+  10          //  0x06,  //"1"
+  11          //  0x5B,  //"2"
+  12          //  0x4F,  //"3"
+  13          //  0x66,  //"4"
+  14          //  0x6D,  //"5"
+  15          //  0x7D,  //"6"
+  16          //  0x07,  //"7"
+  17          //  0x7F,  //"8"
+  18          //  0x6F,  //"9"
+  19          //  0x77,  //"A"
+  20          //  0x7C,  //"B"
+  21          //  0x39,  //"C"
+  22          //  0x5E,  //"D"
+  23          //  0x79,  //"E"
+  24          //  0x71,  //"F"
+  25          //  0x76,  //"H"
+  26          //  0x38,  //"L"
+  27          //  0x37,  //"n"
+  28          //  0x3E,  //"u"
+  29          //  0x73,  //"P"
+  30          //  0x5C,  //"o"
+  31          //  0x40,  //"-"
+  32          //  0x00,  //Ï¨Ãð
+  33          //  0x00  //×Ô¶¨Òå
+  34          //  };
+  35          unsigned char position[]=
+  36            {
+  37            0xff, //1111 1111
+  38            0xfe, //1111 1110
+  39            0xfd, //1111 1101
+  40            0xfb, //1111 1011
+  41            0xf7, //1111 0111
+  42            0xef, //1110 1111
+  43            0xdf, //1101 1111
+  44            0xbf, //1011 1111
+  45            0x7f  //0111 1111
+  46            };
+  47          
+  48          unsigned char number[]={0x3F,0x06,0x5B,0x4F,0x66,0x6D,0x7D,0x07,0x7F,0x6F,0x40};
+  49          unsigned char __2to16[]={0xff,0xfe};
+  50          
+  51          void delay(unsigned int xms)
+  52          {
+  53   1        unsigned char i, j;
+  54   1        while(xms)
+C51 COMPILER V9.60.7.0   MAIN                                                              10/21/2023 09:46:15 PAGE 2   
+
+  55   1        {
+  56   2          i = 2;
+  57   2          j = 239;
+  58   2          do
+  59   2          {
+  60   3            while (--j);
+  61   3          } while (--i);
+  62   2          xms--;
+  63   2        }
+  64   1      }
+  65          
+  66          void beep()
+  67          {
+  68   1      feng=0x00;
+  69   1      delay(50);
+  70   1      feng = 0xff;
+  71   1      delay(50);
+  72   1      //P1=0x00;
+  73   1      //delay(50);
+  74   1      //P1 = 0xff;
+  75   1      //delay(50);
+  76   1      }
+  77          
+  78          void shumaguan(unsigned char digit) {
+  79   1        unsigned char q = 0, e = 0;
+  80   1        if (digit > 10) return;
+  81   1        while(1)
+  82   1        {
+  83   2          P1 = 0x00;
+  84   2          feng = 1;
+  85   2          for(q = 0; q < 9; q++)
+  86   2          {
+  87   3            P0 = position[q];
+  88   3            we = 1;
+  89   3            we = 0;
+  90   3            P0 = number[digit];
+  91   3            du = 1;
+  92   3            du = 0;
+  93   3            delay(1);
+  94   3          }
+  95   2      
+  96   2          e++;
+  97   2          if(e >= 100)
+  98   2          {
+  99   3            du = 1;
+ 100   3            P0 = 0x00;
+ 101   3            du = 0;
+ 102   3            P1 = 0Xff;
+ 103   3            feng = 0;
+ 104   3            break;
+ 105   3          }
+ 106   2        }
+ 107   1      }
+ 108          
+ 109          
+ 110          void main()
+ 111          {
+ 112   1        bit exitflag = 0;
+ 113   1        while(1)
+ 114   1        {
+ 115   2          unsigned int count = 10, i;
+ 116   2          while(exitflag == 0)
+C51 COMPILER V9.60.7.0   MAIN                                                              10/21/2023 09:46:15 PAGE 3   
+
+ 117   2          {
+ 118   3            for (i = 9; i >= 0; i--)
+ 119   3            {
+ 120   4              we = 1;
+ 121   4              P0 = __2to16[1];
+ 122   4              we = 0;
+ 123   4              du = 1;
+ 124   4              P0 = number[i];
+ 125   4              du = 0;
+ 126   4              
+ 127   4              switch(count)
+ 128   4              {
+ 129   5                case 10:
+ 130   5                case 9:
+ 131   5                case 8:
+ 132   5                case 7:
+ 133   5                case 6:
+ 134   5                case 5:
+ 135   5                  delay(1000);
+ 136   5                  count--;
+ 137   5                  break;
+ 138   5                
+ 139   5                case 4:
+ 140   5                case 3:
+ 141   5                case 2:
+ 142   5                  beep();
+ 143   5                  delay(900);
+ 144   5                  count--;
+ 145   5                  break;
+ 146   5                
+ 147   5                case 1:
+ 148   5                  exitflag = 1;
+ 149   5                  count=1;
+ 150   5                  beep();
+ 151   5                  break;
+ 152   5                
+ 153   5                default:
+ 154   5                  break;
+ 155   5              }
+ 156   4                if (count == 0) 
+ 157   4                {
+ 158   5                  exitflag = 1;
+ 159   5                  beep();
+ 160   5                  break;
+ 161   5                }
+ 162   4              
+ 163   4              if(exitflag == 1)
+ 164   4              {
+ 165   5                break;
+ 166   5              }
+ 167   4            }
+ 168   3            if(exitflag == 1)
+ 169   3            {
+ 170   4              break;
+ 171   4            }
+ 172   3          }
+ 173   2          while (exitflag == 1)
+ 174   2          {
+ 175   3            delay(1000);
+ 176   3            shumaguan(10);
+ 177   3            delay(400);
+ 178   3            shumaguan(10);
+C51 COMPILER V9.60.7.0   MAIN                                                              10/21/2023 09:46:15 PAGE 4   
+
+ 179   3            delay(400);
+ 180   3            shumaguan(10);
+ 181   3            delay(400);
+ 182   3            break;
+ 183   3          }
+ 184   2          if(exitflag == 1)
+ 185   2          {
+ 186   3            exitflag = 3;
+ 187   3            break;
+ 188   3          }
+ 189   2        }
+ 190   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    293    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     22       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
